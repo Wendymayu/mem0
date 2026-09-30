@@ -160,25 +160,17 @@ class TestEnsureJsonInstruction:
     # -------------------------------------------------------------------
 
     def test_default_prompts_already_contain_json(self):
-        """Built-in prompts already contain 'json', so ensure_json_instruction is a no-op."""
-        from mem0.configs.prompts import (
-            FACT_RETRIEVAL_PROMPT,
-            USER_MEMORY_EXTRACTION_PROMPT,
-            AGENT_MEMORY_EXTRACTION_PROMPT,
-        )
+        """Built-in extraction prompt already contains 'json', so ensure_json_instruction is a no-op."""
+        from mem0.configs.prompts import ADDITIVE_EXTRACTION_PROMPT
 
-        for name, prompt in [
-            ("FACT_RETRIEVAL_PROMPT", FACT_RETRIEVAL_PROMPT),
-            ("USER_MEMORY_EXTRACTION_PROMPT", USER_MEMORY_EXTRACTION_PROMPT),
-            ("AGENT_MEMORY_EXTRACTION_PROMPT", AGENT_MEMORY_EXTRACTION_PROMPT),
-        ]:
-            assert "json" in prompt.lower(), (
-                f"{name} should contain 'json' — "
-                "if this fails, the default prompts have changed"
-            )
-            # ensure_json_instruction should be a no-op for defaults
-            system, _ = ensure_json_instruction(prompt, "Input:\nuser: test")
-            assert system == prompt, f"ensure_json_instruction modified {name} unexpectedly"
+        name, prompt = "ADDITIVE_EXTRACTION_PROMPT", ADDITIVE_EXTRACTION_PROMPT
+        assert "json" in prompt.lower(), (
+            f"{name} should contain 'json' — "
+            "if this fails, the default extraction prompt has changed"
+        )
+        # ensure_json_instruction should be a no-op for the default
+        system, _ = ensure_json_instruction(prompt, "Input:\nuser: test")
+        assert system == prompt, f"ensure_json_instruction modified {name} unexpectedly"
 
     # -------------------------------------------------------------------
     # Integration: verify fix is wired into both sync and async paths
